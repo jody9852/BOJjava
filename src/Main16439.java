@@ -1,38 +1,55 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
 import java.util.StringTokenizer;
 
 public class Main16439 {
-	public static void main(String args[]) throws IOException {
-		Scanner scan = new Scanner(System.in);
-		
-		int n = scan.nextInt();
-		int m = scan.nextInt();
-		int[][] satis = new int[n][m];
-		int maxSum = 0, temp = 0;
-		int max = 0;
-		
-		for(int i = 0; i < n; i++) {
-			for(int j = 0; j < m; j++) {
-				satis[i][j] = scan.nextInt();
+	static int N, M;
+	static int num[][];
+	static int pick[], mxT[];
+	static int mx, res, mxS;
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		num = new int [N][M];
+		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine(), " ");
+			for (int j = 0; j < M; j++) {
+				num[i][j] = Integer.parseInt(st.nextToken());
 			}
 		}
-		
-		for(int j = 0; j < m - 2; j++) {
-			temp = 0;
-			for(int i = 0; i < n; i++) {
-				max = 0;
-				for(int k = j; k < j + 3; k++) {
-					if(satis[i][k] > max) max = satis[i][k];
+		pick = new int [3];
+		mxT = new int [N];
+		com(0, 0);
+		System.out.println(res);
+	}
+	
+	static void com(int idx, int cnt) {
+		if(cnt == 3) {
+			mx = 0;
+			for (int i = 0; i < N; i++) {
+				mxS = 0;
+				for (int j = 0; j < 3; j++) {
+					if(mxS < num[i][pick[j]]) {
+						mxS = num[i][pick[j]];
+					}
 				}
-				System.out.print(max + " ");
-				temp += max;
+				mxT[i] = mxS;
 			}
-			System.out.println("temp : " + temp);
-			if(temp > maxSum) maxSum = temp;
+			for (int i = 0; i < N; i++) {
+				mx += mxT[i];
+			}
+			if(mx > res) {
+				res = mx;
+			}
+			return;
 		}
-		System.out.println(maxSum);
+		
+		for (int i = idx; i < M; i++) {
+			pick[cnt] = i;
+			com(idx + 1, cnt + 1);
+		}
 	}
 }
